@@ -13,7 +13,7 @@ Directory Bookmarking CLI written in rust
 
 You can install it from [here](https://www.rust-lang.org)
 
-### For Fish 
+## Manual Build
 
 1. clone this repository 
 2. cd to the repository 
@@ -22,7 +22,7 @@ You can install it from [here](https://www.rust-lang.org)
 cargo build --release --bin katuk_rs
 ```
 4. copy target/release/katuk_rs to your PATH (e.g., usr/bin/)
-5. copy script in script/katuk to your PATH (e.g., /usr/bin/)
+5. copy script in script/ to your PATH (e.g., /usr/bin/)
 6. enjoy :D
 
 ## Usage
