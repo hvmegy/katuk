@@ -1,142 +1,121 @@
-pub mod dao; 
-pub mod display;
 pub mod bookmark;
+pub mod bookmarker;
+pub mod display;
 
-use std::{env, error::Error};
+use bookmarker::Bookmarker;
 use std::path::Path;
-use dao::Dao;
+use std::{env, error::Error};
 
+pub fn run() -> Result<(), Box<dyn Error>> {
+    let args: Vec<String> = env::args().collect();
 
-pub fn run() -> Result<(), Box<dyn Error>> { 
-    let args: Vec<String> = env::args().collect(); 
-
-
-    if args.len() < 2 { 
+    if args.len() < 2 {
         return Err(format!("Invalid arguments").into());
-    }
-    else { 
-        let mut dao: Dao = Dao::new();
-        match args[1].as_str() { 
-            "-h" => { 
-
-            }, 
-            "-a" => { 
-                let name = match args.get(2) { 
-                    Some(name) => name, 
-                    None => return Err(format!("Invalid arguments").into()) 
+    } else {
+        let mut bookmarker = Bookmarker::new();
+        match args[1].as_str() {
+            "-h" => {}
+            "-a" => {
+                let name = match args.get(2) {
+                    Some(name) => name,
+                    None => return Err(format!("Invalid arguments").into()),
                 };
 
-                let current_dir = env::current_dir()
-                    .unwrap()
-                    .to_str()
-                    .unwrap()
-                    .to_string();
+                let current_dir = env::current_dir().unwrap().to_str().unwrap().to_string();
 
-                let path = match args.get(3) { 
-                    Some(path) => { 
-                        if Path::new(&path).exists() { 
+                let path = match args.get(3) {
+                    Some(path) => {
+                        if Path::new(&path).exists() {
                             path
+                        } else {
+                            return Err(format!("Path does not exist").into());
                         }
-                        else { 
-                            return Err(format!("Path does not exist").into()); 
-                        }
-                    }, 
-                    None => { 
-                        &current_dir
                     }
+                    None => &current_dir,
                 };
 
-                match dao.add_bookmark(name, path) { 
-                    Ok(()) => { 
+                match bookmarker.add_bookmark(name, path) {
+                    Ok(()) => {
                         println!("add");
                         display::print_ok(&format!("added bookmark {} -> {}", name, path));
-                        dao.write(); 
-                    },
-                    Err(err) => { 
+                        bookmarker.write();
+                    }
+                    Err(err) => {
                         display::print_err(err);
                     }
                 }
-            }, 
-            "-p" => { 
+            }
+            "-p" => {
                 // get path
-                let name = match args.get(2) { 
-                    Some(name) => name, 
-                    None => return Err(format!("Invalid arguments").into()) 
+                let name = match args.get(2) {
+                    Some(name) => name,
+                    None => return Err(format!("Invalid arguments").into()),
                 };
 
-                match dao.get_path(&name) { 
-                    Ok(path) => { 
-                        println!("cd"); 
-                        println!("{}", path); 
+                match bookmarker.get_path(&name) {
+                    Ok(path) => {
+                        println!("cd");
+                        println!("{}", path);
                     }
-                    Err(err) => { 
+                    Err(err) => {
                         return Err(err);
                     }
                 }
-            }, 
-            "-l" => { 
+            }
+            "-l" => {
                 println!("ls");
-                let _ = dao.list_bookmark(); 
-            },
-            "-e" => { 
-                let name = match args.get(2) { 
-                    Some(name) => name, 
-                    None => return Err(format!("Invalid arguments").into()) 
+                let _ = bookmarker.list_bookmark();
+            }
+            "-e" => {
+                let name = match args.get(2) {
+                    Some(name) => name,
+                    None => return Err(format!("Invalid arguments").into()),
                 };
 
-                let current_dir = env::current_dir()
-                    .unwrap()
-                    .to_str()
-                    .unwrap()
-                    .to_string();
+                let current_dir = env::current_dir().unwrap().to_str().unwrap().to_string();
 
-                let path = match args.get(3) { 
-                    Some(path) => { 
-                        if Path::new(&path).exists() { 
+                let path = match args.get(3) {
+                    Some(path) => {
+                        if Path::new(&path).exists() {
                             path
+                        } else {
+                            return Err(format!("Path does not exist").into());
                         }
-                        else { 
-                            return Err(format!("Path does not exist").into()); 
-                        }
-                    }, 
-                    None => { 
-                        &current_dir
                     }
+                    None => &current_dir,
                 };
 
-                match dao.edit_bookmark(name, path) { 
-                    Ok(()) => { 
+                match bookmarker.edit_bookmark(name, path) {
+                    Ok(()) => {
                         println!("edit");
                         display::print_ok(&format!("edited bookmark {} -> {}", name, path));
-                        dao.write(); 
-                    },
-                    Err(err) => { 
+                        bookmarker.write();
+                    }
+                    Err(err) => {
                         display::print_err(err);
                     }
                 }
-            }, 
-            "-d" => { 
-                let name = match args.get(2) { 
-                    Some(name) => name, 
-                    None => return Err(format!("Invalid arguments").into())
+            }
+            "-d" => {
+                let name = match args.get(2) {
+                    Some(name) => name,
+                    None => return Err(format!("Invalid arguments").into()),
                 };
-                match dao.remove_bookmark(name) { 
-                    Ok(()) => { 
-                        println!("remove"); 
+                match bookmarker.remove_bookmark(name) {
+                    Ok(()) => {
+                        println!("remove");
                         display::print_ok(&format!("removed bookmark {}", name));
-                        dao.write(); 
+                        bookmarker.write();
                     }
-                    Err(err) => { 
-                        display::print_err(err); 
+                    Err(err) => {
+                        display::print_err(err);
                     }
                 }
-            }, 
-            _ => { 
-                return Err(format!("Invalid arguments!").into()); 
+            }
+            _ => {
+                return Err(format!("Invalid arguments!").into());
             }
         }
     }
     Ok(())
 }
-
-

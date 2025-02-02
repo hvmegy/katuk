@@ -22,19 +22,17 @@ You can install it from [here](https://www.rust-lang.org)
 cargo build --release --bin katuk_rs
 ```
 4. copy target/release/katuk_rs to your PATH (e.g., usr/bin/)
-5. write this command to the end of your fish config file (~/.config/config.fish) 
-```bash 
-source /path/to/this/repo/katuk
-```
+5. copy script in script/katuk to your PATH (e.g., /usr/bin/)
 6. enjoy :D
 
 ## Usage
 
-```bash
--a <name> # new bookmark for current directory 
--a <name> <path>  # new bookmark for path 
--p <name> # go to the path 
--d <name> # delete the bookmark
--e <name> <path> edit the bookmark
--l # list all the bookmarks
+```
+-h: help
+-a <name>: new bookmark for current directory 
+-a <name> <path>: new bookmark for path 
+-p <name>: change dir to the path 
+-l: list all available bookmarks
+-e <name>: edit the existing bookmark for current directory 
+-e <name> <path>: edit the existing bookmark for path
 ```

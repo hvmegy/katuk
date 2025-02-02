@@ -1,0 +1,15 @@
+#!/bin/bash
+
+signal=$(katuk_rs $@)  
+
+typ=$(echo "$signal" | head -1)
+out=$(echo "$signal" | tail -n +2)
+
+case "$typ" in
+	"cd")
+		cd "$out"
+		echo "Changed directory to $out" 
+		;;
+	*)
+		echo "$out"
+esac
