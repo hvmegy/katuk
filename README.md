@@ -22,7 +22,7 @@ You can install it from [here](https://www.rust-lang.org)
 cargo build --release --bin katuk_rs
 ```
 4. copy target/release/katuk_rs to your PATH (e.g., usr/bin/)
-5. copy script in script/ to your PATH (e.g., /usr/bin/)
+5. source the equivalent script in folder script/ to your shell (e.g., /usr/bin/)
 6. enjoy :D
 
 ## Usage
